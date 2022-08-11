@@ -1,0 +1,7 @@
+# Dependency directories
+node_modules
+
+# Single files
+app.js
+openthesaurus-db-config.json
+source_words.json
