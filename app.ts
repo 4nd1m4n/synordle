@@ -27,7 +27,7 @@ const openthesaurusDbConfig = JSON.parse(
 // Ich habe die Anfragen nur mit den Ausganswörtern gemacht, es fehlen aber die ganzen Synonyme!!!
 
 let sourceWordsJsonFilename = "source_words.json";
-// i.e. { "Telephone", "Mobile", "App", "Application" }
+// i.e. [ "Telephone", "Mobile", "App", "Application" ]
 let sourceAndSynonymWordsJsonFilename = "source_and_synonym_words.json";
 
 // max on google is 4 + the 1 norming word = 5 words max per query
