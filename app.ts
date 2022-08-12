@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // npx tsc app.ts && node app.js > synonym-wordlist.csv
 
 /*
@@ -13,21 +15,23 @@
 // eventuell kann man so auch die Nieten unter den Begriffen heraus finden, man kann immer maximal 5 Begriffe miteinander vergleichen, damit kann ich eventuell was bauen, was dafür sorgt, dass mindestens jeder Begriff mal mit jedem anderen im Verhältniss stand und dann sortieren... wird aber hart kompliziert...
 // eventuell ist es einfacher zu schauen, welche Begriffe an Fahrt aufnehmen und welche immer weniger gesucht werden, daran lässt sich eventuell auch erkennen, was gerade in Mode ist.
 
-const mysql = require("mysql");
-const googleTrends = require("google-trends-api");
+const yargs = require("yargs/yargs");
+const { hideBin } = require("yargs/helpers");
 const fs = require("fs");
 const path = require("path");
+const mysql = require("mysql");
+const googleTrends = require("google-trends-api");
 
+// i.e. { host: "localhost", user: "root", password: "**your-db-password-here**", database: "openthesaurus" }
 const openthesaurusDbConfigFilename = "openthesaurus-db-config.json";
 const openthesaurusDbConfig = JSON.parse(
   fs.readFileSync(openthesaurusDbConfigFilename)
 );
-// i.e. { host: "localhost", user: "root", password: "**your-db-password-here**", database: "openthesaurus" }
 
 // Ich habe die Anfragen nur mit den Ausganswörtern gemacht, es fehlen aber die ganzen Synonyme!!!
 
-let sourceWordsJsonFilename = "source_words.json";
 // i.e. [ "Telephone", "Mobile", "App", "Application" ]
+let sourceWordsJsonFilename = "source_words.json";
 let sourceAndSynonymWordsJsonFilename = "source_and_synonym_words.json";
 
 // max on google is 4 + the 1 norming word = 5 words max per query
@@ -66,7 +70,7 @@ function processCommandLineArguments() {
     switch (args[0]) {
       case "--help":
         console.log(
-          `# This is the help of 'synordle.
+          `# This is the help of synordle.
 
 Synorlde takes a file with a list of source words. (cat 'source_words.json' = ["Foo", "Bar"])
 It will query a database for synonymes for each of those words.
