@@ -1,0 +1,11 @@
+{
+  "interestOverTimeResultsDirectoryName": "interest-over-time_data",
+  "logProgress": true,
+  "openthesaurusDbConfigFilename": "openthesaurus-db-config.json",
+  "relatedQueriesResultsDirectoryName": "related-queries_data",
+  "relateWordsPerQuery_COMMENT": "Trends api only allows a maximum of 5 words per query. That means that the range for words to relate to another word is inclusive from 1 to 4.",
+  "relateWordsPerQuery": 4,
+  "sourceAndSynonymWordsJsonFilename": "source_and_synonym_words.json",
+  "sourceWordsJsonFilename": "source_words.json",
+  "userDocumentsDirectoryName": "user_documents"
+}

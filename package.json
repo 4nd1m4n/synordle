@@ -2,8 +2,12 @@
   "name": "synorlde",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/synorlde.ts",
   "scripts": {
+    "tsc": "tsc",
+    "tscW": "tsc -w",
+    "tscStart": "npm run tsc && node build/synordle.js",
+    "start": "node build/synordle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,7 +19,8 @@
     "yargs": "^17.5.1"
   },
   "devDependencies": {
-    "@types/node": "^18.6.3",
+    "@types/node": "^18.7.2",
+    "@types/yargs": "^17.0.11",
     "typescript": "^4.7.4"
   }
 }

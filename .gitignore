@@ -2,6 +2,8 @@
 node_modules
 
 # Single files
-app.js
 openthesaurus-db-config.json
-source_words.json
+
+# directories or their content
+user_documents/*
+build/
