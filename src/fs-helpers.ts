@@ -1,4 +1,11 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+} from "fs";
+const path = require("path");
 
 // FUNCTIONS
 export function createDirectoriesRelative(relativeDirectoryPaths: string[]) {
@@ -15,4 +22,16 @@ export function readFileToJson(filepath: string): Object {
 
 export function writeJsonToFile(json: Object, filepath: string) {
   writeFileSync(filepath, JSON.stringify(json, null, "  "), "utf8");
+}
+
+export function writeTextToFile(text: string, filepath: string) {
+  writeFileSync(filepath, text, "utf8");
+}
+
+export function readDirectoryContent(directoryPath: string): string[] {
+  return readdirSync(directoryPath, "utf8");
+}
+
+export function readFilename(filepath: string): string {
+  return path.parse(filepath).name;
 }

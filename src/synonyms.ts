@@ -1,5 +1,5 @@
 import * as yargs from "yargs";
-const mysql = require("mysql");
+import * as mysql from "mysql";
 import { readFileToJson, writeJsonToFile } from "./fs-helpers";
 import { connect, createConnection, DbConfig, getSynonyms } from "./db-helpers";
 import { config, openthesaurusDbConfig } from "./config";
@@ -23,14 +23,10 @@ export const synonymsBuilderAndHandler = {
   } as yargs.CommandBuilder,
   handler: async (argv) => {
     const sourceFilepath = `./${config.userDocumentsDirectoryName}/${
-      argv[Options.Source]
-        ? argv[Options.Source]
-        : config.sourceWordsJsonFilename
+      argv[Options.Source] ?? config.sourceWordsJsonFilename
     }`;
     const resultFilepath = `./${config.userDocumentsDirectoryName}/${
-      argv[Options.Result]
-        ? argv[Options.Result]
-        : config.sourceAndSynonymWordsJsonFilename
+      argv[Options.Result] ?? config.sourceAndSynonymWordsJsonFilename
     }`;
 
     await gatherSynonyms(openthesaurusDbConfig, sourceFilepath, resultFilepath);

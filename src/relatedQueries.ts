@@ -11,6 +11,7 @@ import { lp, sleep } from "./helpers";
 enum Options {
   Source = "source",
   Result = "result",
+  Delay = "delay",
 }
 
 export const rqBuilderAndHandler = {
@@ -23,22 +24,21 @@ export const rqBuilderAndHandler = {
       describe: `Path to Directory in ${config.userDocumentsDirectoryName} that the requests resulting JSON data will be stored in. (default: --${Options.Result}="${config.relatedQueriesResultsDirectoryName}")`,
       type: "string",
     },
+    [Options.Delay]: {
+      describe: `Will set the delay that is waited between consecutive requests to the api. Higher delay's help avoiding failing requests with numerous words. (default: --${Options.Delay}="${config.consecutiveRequestDelayMS}")`,
+      type: "number",
+    },
   } as yargs.CommandBuilder,
   handler: async (argv) => {
     const sourceFilepath = `./${config.userDocumentsDirectoryName}/${
-      argv[Options.Source]
-        ? argv[Options.Source]
-        : config.sourceAndSynonymWordsJsonFilename
+      argv[Options.Source] ?? config.sourceAndSynonymWordsJsonFilename
     }`;
     const resultDirectoryPath = `./${config.userDocumentsDirectoryName}/${
-      argv[Options.Result]
-        ? argv[Options.Result]
-        : config.relatedQueriesResultsDirectoryName
+      argv[Options.Result] ?? config.relatedQueriesResultsDirectoryName
     }`;
+    const consecutiveRequestDelayMS =
+      argv[Options.Delay] ?? config.consecutiveRequestDelayMS;
 
-    // TODO: make cli configurable
-    const consecutiveRequestDelayMS = 1000;
-    // TODO: make config.relateWordsPerQuery cli configurable
     // TODO: introduce missing request results retry -> for only redoing requests that failed...
 
     await gatherRelatedQueries(

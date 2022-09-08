@@ -2,6 +2,7 @@
 import * as yargs from "yargs";
 import { registerSynonymsCommand } from "./synonyms";
 import { registerIotCommand } from "./interestOverTime";
+import { registerIotDiagramCommand } from "./interestOverTimeDiagram";
 import { registerRqCommand } from "./relatedQueries";
 
 // MAIN
@@ -12,6 +13,7 @@ import { registerRqCommand } from "./relatedQueries";
 function registerCommands() {
   registerSynonymsCommand();
   registerIotCommand();
+  registerIotDiagramCommand();
   registerRqCommand();
 
   yargs.parse();

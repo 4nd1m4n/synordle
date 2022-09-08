@@ -11,6 +11,8 @@ import { lp, sleep, subArray } from "./helpers";
 enum Options {
   Source = "source",
   Result = "result",
+  Delay = "delay",
+  Relate = "relate",
 }
 
 export const iotBuilderAndHandler = {
@@ -23,28 +25,34 @@ export const iotBuilderAndHandler = {
       describe: `Path to Directory in ${config.userDocumentsDirectoryName} that the requests resulting JSON data will be stored in. (default: --${Options.Result}="${config.interestOverTimeResultsDirectoryName}")`,
       type: "string",
     },
+    [Options.Delay]: {
+      describe: `Will set the delay that is waited between consecutive requests to the api. Higher delay's help avoiding failing requests with numerous words. (default: --${Options.Delay}="${config.consecutiveRequestDelayMS}")`,
+      type: "number",
+    },
+    [Options.Relate]: {
+      describe: `Trends api only allows a maximum of 5 words per query. That means that the range for words to relate to another word is inclusive from 1 to 4. Best to leave it at 4 unless the api changes. (default: --${Options.Relate}="${config.relateWordsPerQuery}")`,
+      type: "number",
+    },
   } as yargs.CommandBuilder,
   handler: async (argv) => {
     const sourceFilepath = `./${config.userDocumentsDirectoryName}/${
-      argv[Options.Source]
-        ? argv[Options.Source]
-        : config.sourceAndSynonymWordsJsonFilename
+      argv[Options.Source] ?? config.sourceAndSynonymWordsJsonFilename
     }`;
     const resultDirectoryPath = `./${config.userDocumentsDirectoryName}/${
-      argv[Options.Result]
-        ? argv[Options.Result]
-        : config.interestOverTimeResultsDirectoryName
+      argv[Options.Result] ?? config.interestOverTimeResultsDirectoryName
     }`;
+    const consecutiveRequestDelayMS =
+      argv[Options.Delay] ?? config.consecutiveRequestDelayMS;
+    const relateWordsPerQuery =
+      argv[Options.Relate] ?? config.relateWordsPerQuery;
 
-    // TODO: make cli configurable
-    const consecutiveRequestDelayMS = 1000;
-    // TODO: make config.relateWordsPerQuery cli configurable
     // TODO: introduce missing request results retry -> for only redoing requests that failed...
 
     await gatherInterestOverTime(
       sourceFilepath,
       resultDirectoryPath,
-      consecutiveRequestDelayMS
+      consecutiveRequestDelayMS,
+      relateWordsPerQuery
     );
   },
 };
@@ -61,7 +69,8 @@ export function registerIotCommand() {
 async function gatherInterestOverTime(
   sourceFilepath: string,
   resultsDirectory: string,
-  consecutiveRequestDelayMS: number
+  consecutiveRequestDelayMS: number,
+  relateWordsPerQuery: number
 ) {
   const words = readFileToJson(sourceFilepath) as string[];
   lp("# Loaded source words\n", words);
@@ -77,12 +86,8 @@ async function gatherInterestOverTime(
       `To few words to relate to one another!\n${sourceFilepath} must have at least one word.`
     );
 
-  for (
-    let index = 1;
-    index < words.length;
-    index += config.relateWordsPerQuery
-  ) {
-    const toRelateWords = subArray(words, index, config.relateWordsPerQuery);
+  for (let index = 1; index < words.length; index += relateWordsPerQuery) {
+    const toRelateWords = subArray(words, index, relateWordsPerQuery);
     const keywords = [normingWord].concat(toRelateWords);
 
     await sleep(consecutiveRequestDelayMS);
@@ -90,6 +95,8 @@ async function gatherInterestOverTime(
     await requestInterestOverTime(keywords)
       .then(function (results) {
         const resultsJson = JSON.parse(results);
+        resultsJson["words"] = keywords;
+
         lp(resultsJson);
 
         const filename = `${resultsDirectory}/${keywords.join("_")}.json`;

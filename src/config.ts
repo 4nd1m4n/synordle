@@ -3,11 +3,13 @@ import { readDbConfig } from "./db-helpers";
 
 // TYPES
 export interface Config {
+  consecutiveRequestDelayMS: number;
   interestOverTimeResultsDirectoryName: string;
   logProgress: boolean;
   openthesaurusDbConfigFilename: string;
   relatedQueriesResultsDirectoryName: string;
   relateWordsPerQuery: number;
+  resultVisualizationFilename: string;
   sourceAndSynonymWordsJsonFilename: string;
   sourceWordsJsonFilename: string;
   userDocumentsDirectoryName: string;
